@@ -8,6 +8,8 @@ const connectDB = require('./config/db')
 // Load env vars
 dotenv.config()
 
+const app = express()
+
 // Connect to database
 connectDB()
 
@@ -22,7 +24,7 @@ if (process.env.NODE_ENV === 'production') {
 const authRoutes = require('./routes/authRoutes')
 const taskRoutes = require('./routes/taskRoutes')
 
-const app = express()
+//const app = express()
 
 // Body parser
 app.use(express.json())

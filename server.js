@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const cors = require('cors');
+//const cors = require('cors');
 const path = require('path');  // Add this line
 const connectDB = require('./config/db');
 const errorHandler = require('./utils/errorHandler');
@@ -12,6 +12,7 @@ const taskRoutes = require('./routes/taskRoutes');
 
 const app = express();
 
+  
 // ========== CORS CONFIGURATION ========== //
 const corsOptions = {
   origin: [

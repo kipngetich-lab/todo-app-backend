@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');  // Add this line
@@ -11,8 +12,22 @@ const taskRoutes = require('./routes/taskRoutes');
 
 const app = express();
 
+// ========== CORS CONFIGURATION ========== //
+const corsOptions = {
+  origin: [
+    'http://localhost:3000', // Local development
+    'https://todo-app-gold-two-yvs53q5aka.vercel.app/', // Production frontend
+    'https://www.yourdomain.com' // If using custom domain
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+app.use(cors(corsOptions)); // 2. Place CORS before all other middleware
+// ======================================== //
+
 // Middleware
-app.use(cors());
+//app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 

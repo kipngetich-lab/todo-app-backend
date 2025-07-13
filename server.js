@@ -46,7 +46,17 @@ app.use('/api/tasks', taskRoutes);
    // res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
  // });
 //}
-
+// Add this before error handler
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'Backend is running',
+    endpoints: {
+      register: '/api/auth/register',
+      login: '/api/auth/login',
+      tasks: '/api/tasks'
+    }
+  });
+});
 // Error handler (must be after routes)
 app.use(errorHandler);
 

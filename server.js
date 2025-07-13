@@ -15,8 +15,8 @@ const app = express();
 // ========== CORS CONFIGURATION ========== //
 const corsOptions = {
   origin: [
-    'http://localhost:3000', // Local development
     'https://todo-app-gold-two-yvs53q5aka.vercel.app/', // Production frontend
+    'http://localhost:3000', // Local development
     'https://www.yourdomain.com' // If using custom domain
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

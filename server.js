@@ -1,62 +1,44 @@
-const express = require('express')
-const dotenv = require('dotenv')
-const morgan = require('morgan')
-const colors = require('colors')
-const cors = require('cors')
-const connectDB = require('./config/db')
+require('dotenv').config();
+const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors');
+const path = require('path');  // Add this line
+const connectDB = require('./config/db');
+const errorHandler = require('./utils/errorHandler');
 
-// Load env vars
-dotenv.config()
+const authRoutes = require('./routes/authRoutes');
+const taskRoutes = require('./routes/taskRoutes');
 
-const app = express()
+const app = express();
 
-// Connect to database
-connectDB()
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(morgan('dev'));
 
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
+
+// Serve static files in production
 if (process.env.NODE_ENV === 'production') {
+  // Set static folder
   app.use(express.static(path.join(__dirname, '../client/dist')));
+
+  // Handle SPA (Single Page Application)
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+    res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
   });
 }
 
-// Route files
-const authRoutes = require('./routes/authRoutes')
-const taskRoutes = require('./routes/taskRoutes')
+// Error handler (must be after routes)
+app.use(errorHandler);
 
-//const app = express()
+// Database Connection
+connectDB();
 
-// Body parser
-app.use(express.json())
+const PORT = process.env.PORT || 5000;
 
-// Enable CORS
-app.use(cors())
-
-// Dev logging middleware
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'))
-}
-
-// Mount routers
-app.use('/api/auth', authRoutes)
-app.use('/api/tasks', taskRoutes)
-
-// Error handling middleware
-const { errorHandler } = require('./middleware/errorHandler')
-app.use(errorHandler)
-
-const PORT = process.env.PORT || 5000
-
-const server = app.listen(
-  PORT,
-  console.log(
-    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
-  )
-)
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err, promise) => {
-  console.log(`Error: ${err.message}`.red)
-  // Close server & exit process
-  server.close(() => process.exit(1))
-})
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
